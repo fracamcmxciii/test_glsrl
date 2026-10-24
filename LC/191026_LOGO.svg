@@ -1,0 +1,10 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+	<style>
+		.s0 { fill: #003566 } 
+		.s1 { fill: #f67828 } 
+	</style>
+	<g id="Cartella 1">
+		<path id="Livello 2 copy 3" fill-rule="evenodd" class="s0" d="m770 950v-180h-540v-170h-180v350zm0-450h180v-200l-450-250-450 250v200h180v-120l270-150 270 150z"/>
+		<path id="Livello 2 copy 5" class="s1" d="m320.8 680.8v-260l180-100 180 100v260z"/>
+	</g>
+</svg>
