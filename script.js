@@ -124,6 +124,56 @@ sections.forEach((s) => observer.observe(s));
 sections[0].classList.add('in-view');
 setActive(0);
 
+/* ---------- Slideshow: il ciclo si adatta alle foto presenti ---------- */
+const SLIDE_INTERVAL = 6000;
+
+const slideSource = (slide) => {
+  const match = slide.style.backgroundImage.match(/url\((['"]?)(.*?)\1\)/);
+  return match ? match[2] : null;
+};
+
+const imageExists = (src) =>
+  new Promise((resolve) => {
+    if (!src) return resolve(false);
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = src;
+  });
+
+const playSlideshow = (slides) => {
+  if (!slides.length) return;
+
+  let index = 0;
+  slides[index].classList.add('is-active');
+
+  if (slides.length === 1) return;
+
+  setInterval(() => {
+    slides[index].classList.remove('is-active');
+    index = (index + 1) % slides.length;
+    slides[index].classList.add('is-active');
+  }, SLIDE_INTERVAL);
+};
+
+document.querySelectorAll('.slides').forEach(async (deck) => {
+  const slides = [...deck.querySelectorAll('.slide')];
+  if (slides.length) slides[0].classList.add('is-active');
+
+  const found = await Promise.all(slides.map((slide) => imageExists(slideSource(slide))));
+  const usable = [];
+
+  slides.forEach((slide, i) => {
+    if (found[i]) {
+      usable.push(slide);
+    } else {
+      slide.remove();
+    }
+  });
+
+  playSlideshow(usable);
+});
+
 /* Navigation */
 navLinks.forEach((link) => {
   if (!link.hash) return;
