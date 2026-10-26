@@ -181,6 +181,7 @@ body {
   mask-position: 0 0;
   will-change: mask-position;
   animation: pattern-pan 46s linear infinite;
+  animation-play-state: paused;
 }
 
 #contatti .pattern::after {
@@ -188,6 +189,12 @@ body {
   -webkit-mask-size: 340px 340px;
   mask-size: 340px 340px;
   animation: pattern-pan-reverse 68s linear infinite;
+  animation-play-state: paused;
+}
+
+#contatti.in-view .pattern::before,
+#contatti.in-view .pattern::after {
+  animation-play-state: running;
 }
 
 @keyframes pattern-pan {
@@ -474,71 +481,154 @@ body {
 
 /* ---------- Mobile ---------- */
 @media (max-width: 860px) {
-  :root { --header-h: 94px; }
+  :root { --header-h: 108px; }
 
+  /* Scroll nativo con snap: più fluido e senza blocchi */
+  .snap-container {
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .panel {
+    scroll-snap-align: start;
+  }
+
+  /* Header: brand sopra, voci su due righe (3 + 2) */
   .site-header {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     height: auto;
-    padding: 10px 14px;
+    padding: 8px 10px 10px;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
+    background: rgba(0, 53, 102, .96);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .brand {
     display: flex;
     width: 100%;
     justify-content: center;
+    gap: 8px;
   }
 
   .brand-logo {
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
   }
 
-  .brand-text { font-size: 14px; }
+  .brand-text { font-size: 13px; }
 
   .main-nav {
     width: 100%;
-    justify-content: space-between;
-    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px 0;
   }
 
   .main-nav a {
-    font-size: clamp(10px, 3.2vw, 14px);
+    flex: 0 0 33.333%;
+    white-space: nowrap;
+    font-size: clamp(11px, 3vw, 13px);
     text-align: center;
-    flex: 1;
+    padding: 4px 2px;
   }
 
-  .content { max-width: 92vw; }
+  /* Tutti i riquadri in basso al centro e più compatti */
+  .panel > .content,
+  .panel > .content-group {
+    align-self: flex-end;
+    width: auto;
+    max-width: 88vw;
+    margin: 0 auto clamp(22px, 5vh, 40px);
+    text-align: center;
+  }
 
-  .content--top { margin-top: 20px; }
+  .content {
+    padding: 18px 20px;
+    border-radius: 22px;
+    background: linear-gradient(145deg, rgba(0, 53, 102, .92), rgba(0, 35, 63, .84));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 
+  .content-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .content-group .content { margin: 0; }
+
+  .title {
+    font-size: clamp(26px, 8vw, 40px);
+    letter-spacing: -1px;
+    margin: 0 0 10px;
+  }
+
+  .desc {
+    max-width: 40ch;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-inline: auto;
+  }
+
+  .contact-actions {
+    justify-content: center;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .contact-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .contact-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .contact-btn--square { border-radius: 14px; }
+
+  .gallery-cta {
+    padding: 11px 22px;
+    font-size: 14px;
+  }
+
+  /* Contatti: card, mappa e contenuto */
   .card-scene {
     place-items: start center;
-    padding: calc(var(--header-h) + 10px) 0 0;
+    padding: calc(var(--header-h) + 8px) 0 0;
   }
 
-  .card-3d { width: min(72vw, 420px); }
+  /* La rotazione 3D gira solo quando la sezione è visibile */
+  .card-3d {
+    width: min(68vw, 400px);
+    animation-play-state: paused;
+  }
+
+  #contatti.in-view .card-3d { animation-play-state: running; }
 
   .map-box {
     left: 0;
     right: 0;
     bottom: auto;
     width: auto;
-    height: min(20vh, 140px);
-    top: calc(var(--header-h) + 30px + 42vw);
-    border-radius: 20px;
+    height: min(16vh, 140px);
+    top: calc(var(--header-h) + 18px + 50vw);
+    border-radius: 18px;
     margin: 0 clamp(12px, 4vw, 24px);
     box-shadow: 0 16px 36px rgba(0, 0, 0, .3);
   }
 
-  .card-scene { padding-left: 0; }
-
   #contatti .content {
     align-self: flex-end;
-    margin: 0 auto clamp(84px, 14vh, 120px);
-    text-align: center;
+    margin: 0 auto clamp(70px, 11vh, 96px);
   }
 
   #contatti .contact-actions { justify-content: center; }
@@ -548,13 +638,110 @@ body {
     text-align: center;
     font-size: 11px;
     padding: 10px 14px;
+    background: rgba(0, 35, 63, .94);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
-  .title { letter-spacing: -1px; }
+  /* Performance: niente zoom, blur o pattern animato su telefono */
+  .slide {
+    will-change: auto;
+    transition-duration: .8s;
+  }
 
-  .desc { font-size: 16px; }
+  .slide.is-active {
+    animation: none;
+    transform: none;
+    will-change: opacity;
+  }
+
+  #contatti .pattern::before,
+  #contatti .pattern::after {
+    animation: none;
+    will-change: auto;
+  }
+
+  .title,
+  .desc {
+    filter: none;
+    transition-duration: .55s;
+  }
 
   .dots { display: none; }
+}
+
+/* Telefoni bassi (es. 667px di altezza): spazi ancora più ridotti */
+@media (max-width: 860px) and (max-height: 700px) {
+  .site-header { padding: 6px 10px 8px; }
+
+  .card-3d { width: min(50vw, 280px); }
+
+  .map-box {
+    top: calc(var(--header-h) + 14px + 38vw);
+    height: min(10vh, 76px);
+  }
+
+  .content { padding: 14px 16px; }
+
+  .title {
+    font-size: clamp(24px, 7vw, 32px);
+    margin-bottom: 8px;
+  }
+
+  .desc {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .contact-actions {
+    margin-top: 14px;
+    gap: 8px;
+  }
+
+  .contact-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  #contatti .content { margin-bottom: 50px; }
+
+  .site-footer {
+    font-size: 10px;
+    padding: 8px 12px;
+  }
+}
+
+/* Telefono in orizzontale: una sola riga di voci, mappa a sinistra */
+@media (max-width: 860px) and (orientation: landscape) {
+  :root { --header-h: 84px; }
+
+  .main-nav a { flex-basis: 20%; }
+
+  .card-scene { display: none; }
+
+  .map-box {
+    top: calc(var(--header-h) + 10px);
+    bottom: 54px;
+    right: auto;
+    left: 0;
+    width: 34vw;
+    height: auto;
+    margin: 0;
+    border-radius: 0 18px 18px 0;
+  }
+
+  #contatti .content {
+    align-self: center;
+    max-width: 52vw;
+    margin: 0 14px 54px auto;
+  }
+
+  #contatti .title { font-size: clamp(22px, 4.4vw, 32px); }
+
+  #contatti .contact-btn {
+    width: 42px;
+    height: 42px;
+  }
 }
 
 

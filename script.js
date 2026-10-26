@@ -5,9 +5,12 @@ const dotsWrap = document.querySelector('.dots');
 
 const DURATION = 1200;
 
+const isMobileLayout = () => window.matchMedia('(max-width: 860px)').matches;
+
 let current = 0;
 let animating = false;
 let cooldown = false;
+let mobileScrollTimer = null;
 
 const easeInOutCubic = (t) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -30,6 +33,16 @@ function goTo(index, duration = DURATION) {
   index = Math.max(0, Math.min(sections.length - 1, index));
   const start = container.scrollTop;
   const end = sections[index].offsetTop;
+
+  /* Su telefono si lascia scorrere il browser: lo snap nativo è più fluido */
+  if (isMobileLayout()) {
+    setActive(index);
+    animating = true;
+    container.scrollTo({ top: end, behavior: 'smooth' });
+    clearTimeout(mobileScrollTimer);
+    mobileScrollTimer = setTimeout(() => (animating = false), 800);
+    return;
+  }
 
   if (Math.abs(end - start) < 1) {
     setActive(index);
@@ -59,6 +72,7 @@ function goTo(index, duration = DURATION) {
 container.addEventListener(
   'wheel',
   (e) => {
+    if (isMobileLayout()) return;
     e.preventDefault();
     if (animating || cooldown || Math.abs(e.deltaY) < 4) return;
     goTo(current + (e.deltaY > 0 ? 1 : -1));
@@ -66,14 +80,15 @@ container.addEventListener(
   { passive: false }
 );
 
-/* Touch swipe */
+/* Touch swipe (solo desktop/tablet: su telefono usa lo scroll nativo) */
 let touchStartY = null;
 container.addEventListener('touchstart', (e) => {
+  if (isMobileLayout()) return;
   touchStartY = e.touches[0].clientY;
 }, { passive: true });
 
 container.addEventListener('touchend', (e) => {
-  if (touchStartY === null || animating) return;
+  if (isMobileLayout() || touchStartY === null || animating) return;
   const delta = touchStartY - e.changedTouches[0].clientY;
   touchStartY = null;
   if (Math.abs(delta) > 50) goTo(current + (delta > 0 ? 1 : -1));
@@ -107,14 +122,22 @@ container.addEventListener('scroll', () => {
 });
 
 /* Reveal animations (replay every time the section is entered) */
+const deckStates = new Map();
+
 const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+      const visible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+
+      if (visible) {
         entry.target.classList.add('in-view');
       } else if (!entry.isIntersecting) {
         entry.target.classList.remove('in-view');
       }
+
+      const deck = entry.target.querySelector('.slides');
+      const state = deck && deckStates.get(deck);
+      if (state) (visible ? state.start() : state.stop());
     });
   },
   { root: container, threshold: [0, 0.5] }
@@ -141,7 +164,7 @@ const imageExists = (src) =>
     img.src = src;
   });
 
-const playSlideshow = (slides) => {
+const playSlideshow = (deck, slides) => {
   if (!slides.length) return;
 
   let index = 0;
@@ -149,11 +172,26 @@ const playSlideshow = (slides) => {
 
   if (slides.length === 1) return;
 
-  setInterval(() => {
-    slides[index].classList.remove('is-active');
-    index = (index + 1) % slides.length;
-    slides[index].classList.add('is-active');
-  }, SLIDE_INTERVAL);
+  let timer = null;
+
+  const state = {
+    start() {
+      if (timer) return;
+      timer = setInterval(() => {
+        slides[index].classList.remove('is-active');
+        index = (index + 1) % slides.length;
+        slides[index].classList.add('is-active');
+      }, SLIDE_INTERVAL);
+    },
+    stop() {
+      clearInterval(timer);
+      timer = null;
+    }
+  };
+
+  deckStates.set(deck, state);
+
+  if (deck.closest('section')?.classList.contains('in-view')) state.start();
 };
 
 document.querySelectorAll('.slides').forEach(async (deck) => {
@@ -171,7 +209,7 @@ document.querySelectorAll('.slides').forEach(async (deck) => {
     }
   });
 
-  playSlideshow(usable);
+  playSlideshow(deck, usable);
 });
 
 /* Navigation */
