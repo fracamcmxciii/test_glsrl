@@ -22,7 +22,7 @@
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      padding: clamp(20px, 6vw, 80px);
+      padding: clamp(20px, 6vw, 80px) clamp(20px, 6vw, 80px) 80px;
       isolation: isolate;
     }
     .under-construction .pattern {
@@ -178,13 +178,34 @@
       to { opacity: 1; transform: translateX(0); }
     }
     .uc-footer {
-      position: relative;
-      z-index: 2;
-      margin-top: clamp(20px, 6vw, 40px);
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       text-align: center;
-      font-size: clamp(10px, 2.2vw, 12px);
-      color: rgba(245,245,245,.9);
-      padding-bottom: clamp(10px, 4vw, 16px);
+      gap: 6px 24px;
+      padding: 14px clamp(16px, 4vw, 48px);
+      background: rgba(0, 35, 63, .6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid #f67828;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: .3px;
+      color: rgba(245, 245, 245, .9);
+    }
+    @media (max-width: 720px) {
+      .uc-footer {
+        font-size: 11px;
+        padding: 10px 14px;
+        background: rgba(0, 35, 63, .94);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
     }
     @media (max-width: 720px) {
       .uc-header { margin-bottom: clamp(12px, 4vw, 24px); }
@@ -243,7 +264,7 @@
       </nav>
       <div class="uc-contacts-text">...intanto, contattaci!</div>
     </div>
-    <footer class="uc-footer">via Torretta 13, Pietrasanta (LU) 55045 - p.iva: 0277 755 0464</footer>
+    <footer class="uc-footer"><span>© 2026 Gabriele Lombardi srl — via Torretta 13, Pietrasanta (LU) 55045 — p.iva: 0277 755 0464</span></footer>
   </main>
 </body>
 </html>
