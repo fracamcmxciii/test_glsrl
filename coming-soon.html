@@ -33,26 +33,35 @@
       overflow: hidden;
       pointer-events: none;
     }
-    .under-construction .pattern::before,
+    .under-construction .pattern::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background-image: url('img/LOGO_ALLBLACK.svg');
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      opacity: .12;
+      animation: pattern-move 40s linear infinite;
+      filter: brightness(0);
+    }
     .under-construction .pattern::after {
       content: '';
       position: absolute;
-      inset: -30%;
-      background-color: #000000;
-      -webkit-mask-image: url('img/LOGO_ALLBLACK.svg');
-      mask-image: url('img/LOGO_ALLBLACK.svg');
-      -webkit-mask-repeat: repeat;
-      mask-repeat: repeat;
-      -webkit-mask-size: 220px 220px;
-      mask-size: 220px 220px;
-      opacity: .16;
-      animation: pattern-pan 36s linear infinite;
+      inset: -50%;
+      background-image: url('img/LOGO_ALLBLACK.svg');
+      background-repeat: repeat;
+      background-size: 300px 300px;
+      opacity: .08;
+      animation: pattern-move-reverse 60s linear infinite;
+      filter: brightness(0);
     }
-    .under-construction .pattern::after {
-      -webkit-mask-size: 340px 340px;
-      mask-size: 340px 340px;
-      opacity: .1;
-      animation: pattern-pan-reverse 58s linear infinite;
+    @keyframes pattern-move {
+      from { background-position: 0 0; }
+      to { background-position: 400px 400px; }
+    }
+    @keyframes pattern-move-reverse {
+      from { background-position: 0 0; }
+      to { background-position: -600px 300px; }
     }
     @keyframes pattern-pan {
       from { -webkit-mask-position: 0 0; mask-position: 0 0; }
