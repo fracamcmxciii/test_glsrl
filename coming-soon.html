@@ -177,8 +177,28 @@
     @keyframes fade-slide-left {
       to { opacity: 1; transform: translateX(0); }
     }
+    .uc-footer {
+      position: relative;
+      z-index: 2;
+      margin-top: clamp(20px, 6vw, 40px);
+      text-align: center;
+      font-size: clamp(10px, 2.2vw, 12px);
+      color: rgba(245,245,245,.9);
+      padding-bottom: clamp(10px, 4vw, 16px);
+    }
     @media (max-width: 720px) {
-      .uc-title { letter-spacing: -2px; }
+      .uc-header { margin-bottom: clamp(12px, 4vw, 24px); }
+      .uc-title {
+        font-size: clamp(36px, 12vw, 64px);
+        letter-spacing: -2px;
+        line-height: 0.95;
+      }
+      .uc-card-wrap {
+        margin-top: clamp(10px, 4vw, 40px);
+        margin-bottom: clamp(18px, 6vw, 40px);
+      }
+      .uc-card { width: min(94vw, 520px); }
+      .uc-contacts-wrap { margin-top: clamp(20px, 8vw, 60px); }
     }
   </style>
 </head>
@@ -223,6 +243,7 @@
       </nav>
       <div class="uc-contacts-text">...intanto, contattaci!</div>
     </div>
+    <footer class="uc-footer">via Torretta 13, Pietrasanta (LU) 55045 - p.iva: 0277 755 0464</footer>
   </main>
 </body>
 </html>
