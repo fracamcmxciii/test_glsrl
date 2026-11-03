@@ -37,20 +37,22 @@
     .under-construction .pattern::after {
       content: '';
       position: absolute;
-      inset: -25%;
-      background-color: rgba(0, 0, 0, .35);
+      inset: -30%;
+      background-color: #000000;
       -webkit-mask-image: url('img/LOGO_ALLBLACK.svg');
       mask-image: url('img/LOGO_ALLBLACK.svg');
       -webkit-mask-repeat: repeat;
       mask-repeat: repeat;
-      -webkit-mask-size: 200px 200px;
-      mask-size: 200px 200px;
-      animation: pattern-pan 40s linear infinite;
+      -webkit-mask-size: 220px 220px;
+      mask-size: 220px 220px;
+      opacity: .16;
+      animation: pattern-pan 36s linear infinite;
     }
     .under-construction .pattern::after {
-      background-color: rgba(0, 0, 0, .18);
-      -webkit-mask-size: 320px 320px;
-      animation: pattern-pan-reverse 62s linear infinite;
+      -webkit-mask-size: 340px 340px;
+      mask-size: 340px 340px;
+      opacity: .1;
+      animation: pattern-pan-reverse 58s linear infinite;
     }
     @keyframes pattern-pan {
       from { -webkit-mask-position: 0 0; mask-position: 0 0; }
