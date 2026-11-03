@@ -13,9 +13,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Montserrat', system-ui, sans-serif;
-      background: radial-gradient(1200px 800px at 10% 0%, rgba(246,120,40,.16), transparent 60%),
-                  radial-gradient(900px 900px at 90% 100%, rgba(0,0,0,.38), transparent 70%),
-                  var(--primary);
+      background: var(--primary);
       color: var(--light);
       min-height: 100dvh;
       overflow-x: hidden;
@@ -40,19 +38,19 @@
       content: '';
       position: absolute;
       inset: -25%;
-      background-color: rgba(246,120,40,.22);
-      -webkit-mask-image: url('img/favicon.svg');
-      mask-image: url('img/favicon.svg');
+      background-color: rgba(0, 0, 0, .35);
+      -webkit-mask-image: url('img/LOGO_ALLBLACK.svg');
+      mask-image: url('img/LOGO_ALLBLACK.svg');
       -webkit-mask-repeat: repeat;
       mask-repeat: repeat;
-      -webkit-mask-size: 210px 210px;
-      mask-size: 210px 210px;
-      animation: pattern-pan 46s linear infinite;
+      -webkit-mask-size: 200px 200px;
+      mask-size: 200px 200px;
+      animation: pattern-pan 40s linear infinite;
     }
     .under-construction .pattern::after {
-      background-color: rgba(245,245,245,.07);
-      -webkit-mask-size: 340px 340px;
-      animation: pattern-pan-reverse 68s linear infinite;
+      background-color: rgba(0, 0, 0, .18);
+      -webkit-mask-size: 320px 320px;
+      animation: pattern-pan-reverse 62s linear infinite;
     }
     @keyframes pattern-pan {
       from { -webkit-mask-position: 0 0; mask-position: 0 0; }
