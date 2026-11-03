@@ -7,14 +7,13 @@
   <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=10">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Montserrat', system-ui, sans-serif;
-      background: var(--primary);
-      color: var(--light);
+      background: #003566;
+      color: #f5f5f5;
       min-height: 100dvh;
       overflow-x: hidden;
     }
@@ -25,6 +24,42 @@
       flex-direction: column;
       padding: clamp(20px, 6vw, 80px);
       isolation: isolate;
+    }
+    .under-construction .pattern {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .under-construction .pattern::before {
+      content: '';
+      position: absolute;
+      inset: -40%;
+      background-image: url('img/LOGO_ALLBLACK.svg');
+      background-repeat: repeat;
+      background-size: 180px 180px;
+      opacity: 0.10;
+      transform: rotate(-30deg);
+      animation: pattern-scroll 60s linear infinite;
+      filter: brightness(0);
+    }
+    @keyframes pattern-scroll {
+      from { background-position: 0 0; }
+      to { background-position: 360px 0; }
+    }
+    .uc-header {
+      position: relative;
+      z-index: 2;
+      margin-bottom: clamp(20px, 6vw, 60px);
+      overflow: hidden;
+    }
+    .uc-title {
+      font-weight: 800;
+      font-size: clamp(48px, 16vw, 220px);
+      line-height: 0.9;
+      letter-spacing: -4px;
+      text-align: left;
     }
     .uc-title-line {
       display: block;
@@ -53,84 +88,10 @@
     @keyframes rise-up {
       to { transform: translateY(0); opacity: 1; }
     }
-    .uc-contacts-wrap {
-      position: relative;
-      z-index: 2;
-      margin-top: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(12px, 2vw, 18px);
+    .uc-card-tilt {
+      transform: rotateX(4deg);
+      transform-style: preserve-3d;
     }
-    .uc-contacts-text {
-      font-weight: 500;
-      font-size: clamp(16px, 3vw, 28px);
-      letter-spacing: -0.3px;
-      font-family: 'Montserrat', system-ui, sans-serif;
-      transform: translateY(40px);
-      opacity: 0;
-      animation: rise-up .8s cubic-bezier(.22,1,.36,1) 1.2s forwards;
-    }
-    .uc-contacts .contact-btn {
-      opacity: 0;
-      transform: translateX(-60px);
-      animation: fade-slide-left .7s cubic-bezier(.22,1,.36,1) forwards;
-    }
-    .uc-contacts .contact-btn:nth-child(1) { animation-delay: 1.6s; }
-    .uc-contacts .contact-btn:nth-child(2) { animation-delay: 1.7s; }
-    .uc-contacts .contact-btn:nth-child(3) { animation-delay: 1.8s; }
-    .uc-contacts .contact-btn:nth-child(4) { animation-delay: 1.9s; }
-    .uc-contacts .contact-btn:nth-child(5) { animation-delay: 2.0s; }
-    @keyframes fade-slide-left {
-      to { opacity: 1; transform: translateX(0); }
-    }
-    .under-construction .pattern {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .under-construction .pattern::before {
-      content: '';
-      position: absolute;
-      inset: -40%;
-      background-image: url('img/LOGO_ALLBLACK.svg');
-      background-repeat: repeat;
-      background-size: 180px 180px;
-      opacity: .10;
-      transform: rotate(-30deg);
-      animation: pattern-scroll 60s linear infinite;
-      filter: brightness(0);
-    }
-    @keyframes pattern-scroll {
-      from { background-position: 0 0; }
-      to { background-position: 360px 0; }
-    }
-    @keyframes pattern-pan {
-      from { -webkit-mask-position: 0 0; mask-position: 0 0; }
-      to { -webkit-mask-position: 420px 420px; mask-position: 420px 420px; }
-    }
-    @keyframes pattern-pan-reverse {
-      from { -webkit-mask-position: 0 0; mask-position: 0 0; }
-      to { -webkit-mask-position: -680px 340px; mask-position: -680px 340px; }
-    }
-    .uc-header {
-      position: relative;
-      z-index: 2;
-      margin-bottom: clamp(20px, 6vw, 60px);
-      overflow: hidden;
-    }
-    .uc-title {
-      font-weight: 800;
-      font-size: clamp(48px, 16vw, 220px);
-      line-height: 0.9;
-      letter-spacing: -4px;
-      text-transform: none;
-      text-align: left;
-    }
-    .uc-title-line { display: block; }
-    .uc-card-tilt { transform: rotateX(4deg); transform-style: preserve-3d; }
     .uc-card {
       width: min(860px, 92vw);
       aspect-ratio: 1039 / 685;
@@ -145,11 +106,18 @@
       -webkit-backface-visibility: hidden;
       border-radius: 18px;
       overflow: hidden;
-      border: 1px solid var(--secondary);
+      border: 1px solid #f67828;
       box-shadow: 0 40px 80px rgba(0,0,0,.5);
     }
-    .uc-card-face img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .uc-card-face--back { transform: rotateY(180deg); }
+    .uc-card-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .uc-card-face--back {
+      transform: rotateY(180deg);
+    }
     @keyframes uc-card-spin {
       from { transform: rotateY(0deg); }
       to { transform: rotateY(360deg); }
@@ -168,6 +136,9 @@
       font-size: clamp(16px, 3vw, 28px);
       letter-spacing: -0.3px;
       font-family: 'Montserrat', system-ui, sans-serif;
+      transform: translateY(40px);
+      opacity: 0;
+      animation: rise-up .8s cubic-bezier(.22,1,.36,1) 1.2s forwards;
     }
     .uc-contacts {
       display: flex;
@@ -175,13 +146,36 @@
       justify-content: center;
       gap: clamp(10px, 2vw, 18px);
     }
-    .uc-contacts .contact-btn {
+    .contact-btn {
       width: clamp(56px, 8vw, 72px);
       height: clamp(56px, 8vw, 72px);
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #003566;
+      color: #fff;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,.3);
+      opacity: 0;
+      transform: translateX(-60px);
+      animation: fade-slide-left .7s cubic-bezier(.22,1,.36,1) forwards;
     }
-    .uc-contacts .contact-btn svg {
+    .contact-btn--square {
+      border-radius: 18px;
+      background: transparent;
+      border: 2px solid rgba(245,245,245,.9);
+    }
+    .contact-btn svg {
       width: clamp(24px, 4vw, 30px);
       height: clamp(24px, 4vw, 30px);
+    }
+    .uc-contacts .contact-btn:nth-child(1) { animation-delay: 1.6s; }
+    .uc-contacts .contact-btn:nth-child(2) { animation-delay: 1.7s; }
+    .uc-contacts .contact-btn:nth-child(3) { animation-delay: 1.8s; }
+    .uc-contacts .contact-btn:nth-child(4) { animation-delay: 1.9s; }
+    .uc-contacts .contact-btn:nth-child(5) { animation-delay: 2.0s; }
+    @keyframes fade-slide-left {
+      to { opacity: 1; transform: translateX(0); }
     }
     @media (max-width: 720px) {
       .uc-title { letter-spacing: -2px; }
