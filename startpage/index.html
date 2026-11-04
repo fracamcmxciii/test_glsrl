@@ -59,6 +59,15 @@
     .left-col::-webkit-scrollbar-thumb, .right-col::-webkit-scrollbar-thumb { background: rgba(246,120,40,.6); border-radius: 6px; }
     .left-col::-webkit-scrollbar-track, .right-col::-webkit-scrollbar-track { background: transparent; }
     
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .title-logo {
+      width: clamp(60px, 10vw, 90px);
+      height: clamp(60px, 10vw, 90px);
+    }
     .title {
       font-size: clamp(42px, 10vw, 90px);
       font-weight: 800;
@@ -183,8 +192,8 @@
     
     .links-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
     }
     .link-item {
       display: flex;
@@ -195,15 +204,16 @@
       text-decoration: none;
       color: #f5f5f5;
       text-align: center;
-      padding: 8px 6px;
+      padding: 10px 6px;
       background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
       border: 1px solid rgba(246,120,40,.6);
       border-radius: 12px;
       transition: border-color .2s ease, background .2s ease, transform .2s ease;
+      min-height: 90px;
     }
     .link-item svg {
-      width: 26px;
-      height: 26px;
+      width: 29px;
+      height: 29px;
     }
     .link-item:hover {
       border-color: #f67828;
@@ -211,7 +221,7 @@
       transform: translateY(-2px);
     }
     .link-name {
-      font-size: 10px;
+      font-size: 11px;
       line-height: 1.2;
       max-width: 90px;
     }
@@ -226,17 +236,25 @@
       border-radius: 14px;
       box-shadow: 0 16px 40px rgba(0,0,0,.4);
       margin-top: auto;
+      position: relative;
+    }
+    .notes-wrapper {
+      position: relative;
+      width: 100%;
     }
     .notes-card textarea {
       width: 100%;
-      min-height: 100px;
+      min-height: 80px;
+      height: 120px;
       background: transparent;
       border: none;
       color: #f5f5f5;
       font-family: 'Montserrat', sans-serif;
       font-size: 13px;
-      resize: vertical;
+      resize: both;
       outline: none;
+      overflow: auto;
+      display: block;
     }
     
     .calendar-card {
@@ -259,6 +277,7 @@
       html, body { overflow: auto; }
       .calendar-card { height: 400px; }
       .search-box { width: 100%; }
+      .links-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -266,7 +285,10 @@
   <div class="bg-pattern"></div>
   <div class="container">
     <div class="left-col">
-      <h1 class="title">Startpage</h1>
+      <div class="title-row">
+        <img class="title-logo" src="https://lombardiadmin.github.io/gl_startpage/img/LOGOWHITE.svg" alt="Logo">
+        <h1 class="title">Startpage</h1>
+      </div>
       
       <div class="time">
         <span id="time-main">00:00</span>
@@ -351,7 +373,9 @@
       
       <div class="notes-card">
         <div style="font-weight:600; font-size:14px;">Note</div>
-        <textarea id="notes" placeholder="Scrivi le tue note..."></textarea>
+        <div class="notes-wrapper">
+          <textarea id="notes" placeholder="Scrivi le tue note..."></textarea>
+        </div>
       </div>
     </div>
     
