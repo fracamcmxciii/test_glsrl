@@ -409,8 +409,17 @@
     </div>
     
     <div class="right-col">
-      <div class="calendar-card">
-        <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Europe%2FRome&showPrint=0&showTabs=1&showCalendars=0&showTz=0&src=Z2FicmllbGVsb21iYXJkaXNzcmxAZ21haWwuY29t&color=%23039BE5" style="border:solid 1px #777" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+      <div class="calendar-card" style="display:flex;flex-direction:column;padding:12px;gap:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <button onclick="prevMonth()" style="background:transparent;border:none;color:#f5f5f5;cursor:pointer;">&#10094;</button>
+          <div id="calTitle" style="font-weight:600;"></div>
+          <button onclick="nextMonth()" style="background:transparent;border:none;color:#f5f5f5;cursor:pointer;">&#10095;</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;opacity:.8;">
+          <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
+        </div>
+        <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;flex:1;"></div>
+        <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" style="text-align:center;color:#f5f5f5;text-decoration:none;background:#f67828;padding:8px;border-radius:8px;font-weight:600;">[Apri Google Calendar]</a>
       </div>
     </div>
   </div>
@@ -575,6 +584,42 @@
       notes.value = localStorage.getItem('startpage-notes') || '';
       notes.addEventListener('input', () => localStorage.setItem('startpage-notes', notes.value));
     }
+
+    // Local calendar
+    let calDate = new Date();
+    function renderCalendar() {
+      const grid = document.getElementById('calGrid');
+      const title = document.getElementById('calTitle');
+      if (!grid || !title) return;
+      grid.innerHTML = '';
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const monthNames = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+      title.textContent = monthNames[month] + ' ' + year;
+      let start = firstDay.getDay();
+      if (start === 0) start = 7;
+      for (let i = 1; i < start; i++) {
+        const empty = document.createElement('div');
+        grid.appendChild(empty);
+      }
+      for (let d = 1; d <= lastDay.getDate(); d++) {
+        const cell = document.createElement('div');
+        cell.textContent = d;
+        cell.style.padding = '6px 0';
+        cell.style.borderRadius = '6px';
+        const today = new Date();
+        if (today.getDate() === d && today.getMonth() === month && today.getFullYear() === year) {
+          cell.style.background = '#f67828';
+          cell.style.fontWeight = '600';
+        }
+        grid.appendChild(cell);
+      }
+    }
+    function prevMonth() { calDate.setMonth(calDate.getMonth() - 1); renderCalendar(); }
+    function nextMonth() { calDate.setMonth(calDate.getMonth() + 1); renderCalendar(); }
+    renderCalendar();
   </script>
 </body>
 </html>
