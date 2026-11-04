@@ -419,7 +419,7 @@
           <div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div>
         </div>
         <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;flex:1;"></div>
-        <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" style="text-align:center;color:#f5f5f5;text-decoration:none;background:#f67828;padding:8px;border-radius:8px;font-weight:600;">[Apri Google Calendar]</a>
+        <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" style="text-align:center;color:#f5f5f5;text-decoration:none;background:#f67828;padding:8px;border-radius:8px;font-weight:600;">vai su Google Calendar</a>
       </div>
     </div>
   </div>
@@ -605,16 +605,47 @@
         grid.appendChild(empty);
       }
       for (let d = 1; d <= lastDay.getDate(); d++) {
-        const cell = document.createElement('div');
-        cell.textContent = d;
-        cell.style.padding = '6px 0';
-        cell.style.borderRadius = '6px';
+        const cellWrap = document.createElement('div');
+        cellWrap.style.display = 'flex';
+        cellWrap.style.flexDirection = 'column';
+        cellWrap.style.minHeight = '40px';
+        cellWrap.style.borderRadius = '6px';
+        cellWrap.style.overflow = 'hidden';
+        const dayNum = document.createElement('div');
+        dayNum.textContent = d;
+        dayNum.style.padding = '2px 4px';
+        dayNum.style.fontSize = '10px';
         const today = new Date();
         if (today.getDate() === d && today.getMonth() === month && today.getFullYear() === year) {
-          cell.style.background = '#f67828';
-          cell.style.fontWeight = '600';
+          cellWrap.style.background = 'rgba(246,120,40,0.3)';
+          dayNum.style.fontWeight = '600';
         }
-        grid.appendChild(cell);
+        const note = document.createElement('div');
+        note.contentEditable = true;
+        note.setAttribute('data-date', year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0'));
+        note.style.flex = '1';
+        note.style.fontSize = '9px';
+        note.style.padding = '2px 4px';
+        note.style.outline = 'none';
+        note.style.wordBreak = 'break-word';
+        note.style.overflow = 'hidden';
+        const key = 'cal-note-' + note.getAttribute('data-date');
+        note.textContent = localStorage.getItem(key) || '';
+        note.addEventListener('input', () => {
+          if (note.textContent.length > 30) {
+            note.textContent = note.textContent.substring(0, 30);
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.selectNodeContents(note);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+          localStorage.setItem(key, note.textContent);
+        });
+        cellWrap.appendChild(dayNum);
+        cellWrap.appendChild(note);
+        grid.appendChild(cellWrap);
       }
     }
     function prevMonth() { calDate.setMonth(calDate.getMonth() - 1); renderCalendar(); }
