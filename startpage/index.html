@@ -51,7 +51,7 @@
     .left-col, .right-col {
       display: flex;
       flex-direction: column;
-      gap: clamp(16px, 3vw, 28px);
+      gap: clamp(16px, 3vw, 24px);
       overflow-y: auto;
       padding-right: 8px;
     }
@@ -66,28 +66,37 @@
       line-height: 0.9;
     }
     
-    .time-row {
-      display: flex;
-      align-items: center;
-      gap: clamp(16px, 3vw, 28px);
-      flex-wrap: nowrap;
-    }
     .time {
       font-size: clamp(48px, 14vw, 140px);
       font-weight: 700;
       letter-spacing: -4px;
       line-height: 0.9;
+    }
+    
+    .top-row {
       display: flex;
-      align-items: baseline;
-      gap: 12px;
-      min-width: fit-content;
-      flex-shrink: 0;
+      align-items: center;
+      gap: clamp(16px, 3vw, 24px);
+      flex-wrap: wrap;
+    }
+    
+    .seconds-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
+      border: 1px solid #f67828;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.3);
+      height: 72px;
     }
     .time-seconds {
-      font-size: clamp(24px, 7vw, 70px);
+      font-size: clamp(32px, 8vw, 64px);
       color: #f67828;
-      font-weight: 600;
+      font-weight: 700;
     }
+    
     .alarm-card {
       display: flex;
       align-items: center;
@@ -97,8 +106,7 @@
       border: 1px solid #f67828;
       border-radius: 12px;
       box-shadow: 0 10px 30px rgba(0,0,0,.3);
-      height: fit-content;
-      flex-shrink: 0;
+      height: 72px;
     }
     .alarm-card input[type="time"] {
       background: transparent;
@@ -118,26 +126,26 @@
       font-weight: 600;
     }
     
-    .weather {
+    .weather-row {
       display: flex;
-      gap: clamp(12px, 2vw, 18px);
+      align-items: stretch;
+      gap: clamp(12px, 2vw, 16px);
       flex-wrap: wrap;
     }
     .weather-card {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 14px;
+      padding: 10px 16px;
       background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
       border: 1px solid rgba(246,120,40,.6);
       border-radius: 14px;
       box-shadow: 0 12px 30px rgba(0,0,0,.3);
-      width: fit-content;
-      min-width: 140px;
+      height: 72px;
     }
     .weather-icon {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
     }
     .weather-info {
       display: flex;
@@ -178,56 +186,70 @@
       cursor: pointer;
     }
     
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 12px;
     }
     .link-item {
-      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #f5f5f5;
+      text-align: center;
+    }
+    .link-btn {
       display: grid;
       place-items: center;
-      width: 52px;
-      height: 52px;
+      width: 54px;
+      height: 54px;
       background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
       border: 1px solid rgba(246,120,40,.6);
       border-radius: 12px;
-      color: #f5f5f5;
-      text-decoration: none;
       transition: border-color .2s ease, background .2s ease, transform .2s ease;
     }
-    .link-item svg {
-      width: 24px;
-      height: 24px;
+    .link-btn svg {
+      width: 26px;
+      height: 26px;
     }
-    .link-item:hover {
+    .link-item:hover .link-btn {
       border-color: #f67828;
       background: rgba(246,120,40,.25);
       transform: translateY(-2px);
     }
-    .link-item .link-tooltip {
-      position: absolute;
-      bottom: -32px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,35,63,.95);
-      color: #f5f5f5;
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 12px;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s ease;
-      border: 1px solid rgba(246,120,40,.6);
+    .link-name {
+      font-size: 11px;
+      line-height: 1.2;
+      max-width: 90px;
     }
-    .link-item:hover .link-tooltip {
-      opacity: 1;
+    
+    .notes-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 16px;
+      background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
+      border: 1px solid #f67828;
+      border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.4);
+    }
+    .notes-card textarea {
+      width: 100%;
+      min-height: 140px;
+      background: transparent;
+      border: none;
+      color: #f5f5f5;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      resize: vertical;
+      outline: none;
     }
     
     .calendar-card {
       flex: 1;
-      min-height: 400px;
+      height: 100%;
       background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
       border: 1px solid #f67828;
       border-radius: 16px;
@@ -240,31 +262,10 @@
       border: none;
     }
     
-    .notes-card {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 16px 18px;
-      background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
-      border: 1px solid #f67828;
-      border-radius: 16px;
-      box-shadow: 0 16px 40px rgba(0,0,0,.4);
-    }
-    .notes-card textarea {
-      width: 100%;
-      min-height: 160px;
-      background: transparent;
-      border: none;
-      color: #f5f5f5;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-      resize: vertical;
-      outline: none;
-    }
-    
     @media (max-width: 1100px) {
       .container { grid-template-columns: 1fr; overflow-y: auto; }
       html, body { overflow: auto; }
+      .calendar-card { height: 400px; }
     }
   </style>
 </head>
@@ -274,11 +275,8 @@
     <div class="left-col">
       <h1 class="title">Startpage</h1>
       
-      <div class="time-row">
-        <div class="time">
-          <span id="time-main">00:00</span>
-          <span class="time-seconds" id="time-sec">:00</span>
-        </div>
+      <div class="top-row">
+        <div class="time" id="time-main">00:00</div>
         <div class="alarm-card">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f67828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3L2 6"/><path d="M22 6l-3-3"/><path d="M6.38 18.7L4 21"/><path d="M17.64 18.67L20 21"/></svg>
           <input type="time" id="alarmTime">
@@ -287,7 +285,10 @@
         </div>
       </div>
       
-      <div class="weather">
+      <div class="weather-row">
+        <div class="seconds-card">
+          <span class="time-seconds" id="time-sec">:00</span>
+        </div>
         <div class="weather-card">
           <img class="weather-icon" id="weather-icon-today" src="" alt="">
           <div class="weather-info">
@@ -304,67 +305,90 @@
         </div>
       </div>
       
-      <form class="search-box" action="https://duckduckgo.com/" method="GET">
+      <form class="search-box" action="https://www.google.com/search" method="GET">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" name="q" placeholder="Cerca con DuckDuckGo..." autocomplete="off">
+        <input type="text" name="q" placeholder="Cerca con Google..." autocomplete="off">
         <button type="submit">Cerca</button>
       </form>
       
-      <div class="links">
-        <a class="link-item" href="https://gabrielelombardisrl.com" target="_blank" title="Sito">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <span class="link-tooltip">Sito</span>
+      <div class="links-grid">
+        <a class="link-item" href="https://gabrielelombardisrl.com" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <span class="link-name">Sito</span>
         </a>
-        <a class="link-item" href="https://webmail.gabrielelombardisrl.com" target="_blank" title="Webmail">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <span class="link-tooltip">Webmail</span>
+        <a class="link-item" href="https://webmail.gabrielelombardisrl.com" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <span class="link-name">Webmail</span>
         </a>
-        <a class="link-item" href="https://www.namecheap.com" target="_blank" title="Namecheap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10v10H7z"/></svg>
-          <span class="link-tooltip">Namecheap</span>
+        <a class="link-item" href="https://www.namecheap.com" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10v10H7z"/></svg>
+          </div>
+          <span class="link-name">Namecheap</span>
         </a>
-        <a class="link-item" href="https://pec.legalmail.it" target="_blank" title="Legalmail PEC">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
-          <span class="link-tooltip">Legalmail PEC</span>
+        <a class="link-item" href="https://pec.legalmail.it" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
+          </div>
+          <span class="link-name">Legalmail PEC</span>
         </a>
-        <a class="link-item" href="https://namiral.it" target="_blank" title="Namiral PEC">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/></svg>
-          <span class="link-tooltip">Namiral PEC</span>
+        <a class="link-item" href="https://namiral.it" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/></svg>
+          </div>
+          <span class="link-name">Namiral PEC</span>
         </a>
-        <a class="link-item" href="https://mail.google.com" target="_blank" title="Gmail">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <span class="link-tooltip">Gmail</span>
+        <a class="link-item" href="https://mail.google.com" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <span class="link-name">Gmail</span>
         </a>
-        <a class="link-item" href="https://www.fattureincloud.it" target="_blank" title="Fatture in cloud">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-          <span class="link-tooltip">Fatture in cloud</span>
+        <a class="link-item" href="https://www.fattureincloud.it" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          </div>
+          <span class="link-name">Fatture in cloud</span>
         </a>
-        <a class="link-item" href="https://drive.google.com/drive/folders/1b-_ltrPAFRr6zDzSw6Bn8rayREw6NcQG?usp=drive_link" target="_blank" title="Google Drive">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          <span class="link-tooltip">Google Drive</span>
+        <a class="link-item" href="https://drive.google.com/drive/folders/1b-_ltrPAFRr6zDzSw6Bn8rayREw6NcQG?usp=drive_link" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <span class="link-name">Google Drive</span>
         </a>
-        <a class="link-item" href="https://github.com/lombardiadmin?tab=repositories" target="_blank" title="GitHub">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-          <span class="link-tooltip">GitHub</span>
+        <a class="link-item" href="https://github.com/lombardiadmin?tab=repositories" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </div>
+          <span class="link-name">GitHub</span>
         </a>
-        <a class="link-item" href="https://www.facebook.com/gabrielelombardi.srl" target="_blank" title="Facebook">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.891h-2.33v6.988C18.343 21.128 22 4.991 22 12z"/></svg>
-          <span class="link-tooltip">Facebook</span>
+        <a class="link-item" href="https://www.facebook.com/gabrielelombardi.srl" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.891h-2.33v6.988C18.343 21.128 22 4.991 22 12z"/></svg>
+          </div>
+          <span class="link-name">Facebook</span>
         </a>
-        <a class="link-item" href="https://www.instagram.com/gabrielelombardi.srl/" target="_blank" title="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          <span class="link-tooltip">Instagram</span>
+        <a class="link-item" href="https://www.instagram.com/gabrielelombardi.srl/" target="_blank">
+          <div class="link-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          <span class="link-name">Instagram</span>
         </a>
+      </div>
+      
+      <div class="notes-card">
+        <div style="font-weight:600; font-size:14px;">Note</div>
+        <textarea id="notes" placeholder="Scrivi le tue note..."></textarea>
       </div>
     </div>
     
     <div class="right-col">
       <div class="calendar-card">
         <iframe src="https://calendar.google.com/calendar/embed?src=gabrielelombardisrl%40gmail.com&ctz=Europe%2FRome&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0&showTz=0" style="border: 0" frameborder="0" scrolling="no"></iframe>
-      </div>
-      <div class="notes-card">
-        <div style="font-weight:600;">Note</div>
-        <textarea id="notes" placeholder="Scrivi le tue note..."></textarea>
       </div>
     </div>
   </div>
