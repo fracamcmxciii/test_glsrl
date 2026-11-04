@@ -67,6 +67,7 @@
     .title-logo {
       width: clamp(60px, 10vw, 90px);
       height: clamp(60px, 10vw, 90px);
+      margin-top: -10px;
     }
     .title {
       font-size: clamp(42px, 10vw, 90px);
@@ -171,8 +172,8 @@
       border: 1px solid #f67828;
       border-radius: 999px;
       box-shadow: 0 12px 30px rgba(0,0,0,.3);
-      width: 50%;
-      max-width: 420px;
+      width: 100%;
+      max-width: calc(180px * 2 + 72px + 14px * 2);
     }
     .search-box input {
       flex: 1;
@@ -226,36 +227,7 @@
       max-width: 90px;
     }
     
-    .notes-card {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 14px 16px;
-      background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
-      border: 1px solid #f67828;
-      border-radius: 14px;
-      box-shadow: 0 16px 40px rgba(0,0,0,.4);
-      margin-top: auto;
-      position: relative;
-    }
-    .notes-wrapper {
-      position: relative;
-      width: 100%;
-    }
-    .notes-card textarea {
-      width: 100%;
-      min-height: 80px;
-      height: 120px;
-      background: transparent;
-      border: none;
-      color: #f5f5f5;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      resize: both;
-      outline: none;
-      overflow: auto;
-      display: block;
-    }
+    /* Note rimosse */
     
     .calendar-card {
       flex: 1;
@@ -371,12 +343,7 @@
         </a>
       </div>
       
-      <div class="notes-card">
-        <div style="font-weight:600; font-size:14px;">Note</div>
-        <div class="notes-wrapper">
-          <textarea id="notes" placeholder="Scrivi le tue note..."></textarea>
-        </div>
-      </div>
+      <!-- Note rimosse -->
     </div>
     
     <div class="right-col">
@@ -400,6 +367,21 @@
 
     let alarmTime = null;
     let alarmTriggered = false;
+    function playAlarm() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 880;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 1);
+      } catch(e) {}
+    }
     function setAlarm() {
       const val = document.getElementById('alarmTime').value;
       if (!val) return;
@@ -413,6 +395,7 @@
       const cur = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
       if (cur === alarmTime && !alarmTriggered) {
         alarmTriggered = true;
+        playAlarm();
         alert('Sveglia!');
         document.getElementById('alarmStatus').textContent = 'Sveglia attivata';
       }
@@ -441,9 +424,7 @@
     }
     loadWeather();
 
-    const notes = document.getElementById('notes');
-    notes.value = localStorage.getItem('startpage-notes') || '';
-    notes.addEventListener('input', () => localStorage.setItem('startpage-notes', notes.value));
+    // Note rimosse
   </script>
 </body>
 </html>
