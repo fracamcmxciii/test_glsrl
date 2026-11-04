@@ -14,7 +14,7 @@
       font-family: 'Montserrat', system-ui, sans-serif;
       background: #003566;
       color: #f5f5f5;
-      overflow: hidden;
+      overflow: visible;
     }
     .bg-pattern {
       position: fixed;
@@ -46,18 +46,15 @@
       gap: clamp(20px, 4vw, 60px);
       height: 100dvh;
       padding: clamp(20px, 4vw, 60px);
-      overflow: hidden;
+      overflow: visible;
     }
     .left-col, .right-col {
       display: flex;
       flex-direction: column;
       gap: clamp(16px, 3vw, 22px);
-      overflow-y: auto;
-      padding-right: 8px;
+      overflow: visible;
+      padding-right: 0;
     }
-    .left-col::-webkit-scrollbar, .right-col::-webkit-scrollbar { width: 6px; }
-    .left-col::-webkit-scrollbar-thumb, .right-col::-webkit-scrollbar-thumb { background: rgba(246,120,40,.6); border-radius: 6px; }
-    .left-col::-webkit-scrollbar-track, .right-col::-webkit-scrollbar-track { background: transparent; }
     
     .title-row {
       display: flex;
@@ -297,8 +294,8 @@
     }
     
     @media (max-width: 1100px) {
-      .container { grid-template-columns: 1fr; overflow-y: auto; }
-      html, body { overflow: auto; }
+      .container { grid-template-columns: 1fr; overflow: visible; }
+      html, body { overflow: visible; }
       .calendar-card { height: 400px; }
       .search-box { width: 100%; }
       .links-grid { grid-template-columns: repeat(2, 1fr); }
@@ -354,7 +351,7 @@
       </form>
       
       <div class="links-grid" id="linksGrid">
-        <a class="link-item" href="https://gabrielelombardisrl.com" target="_blank">
+        <a class="link-item" href="https://www.gabrielelombardisrl.com" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           <span class="link-name">Sito</span>
         </a>
