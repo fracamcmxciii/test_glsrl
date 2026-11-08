@@ -72,18 +72,19 @@
     .title {
       font-size: clamp(42px, 10vw, 90px);
       font-weight: 800;
-      letter-spacing: -3px;
+      letter-spacing: -2.7px;
       line-height: 0.9;
     }
     
     .time {
       font-size: clamp(48px, 14vw, 140px);
       font-weight: 700;
-      letter-spacing: -4px;
+      letter-spacing: -3.6px;
       line-height: 0.9;
       display: flex;
       align-items: baseline;
       gap: 10px;
+      cursor: pointer;
     }
     .time-seconds {
       font-size: clamp(24px, 7vw, 70px);
@@ -104,19 +105,6 @@
       gap: clamp(10px, 2vw, 14px);
       flex-wrap: wrap;
     }
-    .weather-card {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
-      border: 1px solid rgba(246,120,40,.6);
-      border-radius: 14px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.3);
-      height: 72px;
-      width: 180px;
-      flex-shrink: 0;
-    }
     .location-card {
       display: flex;
       align-items: center;
@@ -126,7 +114,7 @@
       border: 1px solid #f67828;
       border-radius: 14px;
       box-shadow: 0 12px 30px rgba(0,0,0,.3);
-      height: 72px;
+      min-height: 72px;
     }
     .location-card input {
       background: transparent;
@@ -148,50 +136,29 @@
       font-weight: 600;
       font-size: 12px;
     }
-    .alarm-card {
+    .weather-week-card {
+      flex: 1;
       display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
+      gap: 8px;
+      padding: 10px;
       background: linear-gradient(145deg, rgba(0,53,102,.8), rgba(0,35,63,.5));
-      border: 1px solid #f67828;
+      border: 1px solid rgba(246,120,40,.6);
       border-radius: 14px;
       box-shadow: 0 12px 30px rgba(0,0,0,.3);
-      height: 72px;
+      overflow-x: auto;
+      min-height: 72px;
     }
-    .alarm-card input[type="time"] {
-      background: transparent;
-      border: none;
-      color: #f5f5f5;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-    }
-    .alarm-card button {
-      background: #f67828;
-      border: none;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-    }
-    
-    .weather-icon {
-      width: 42px;
-      height: 42px;
-    }
-    .weather-info {
+    .weather-day-item {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      min-width: 58px;
+      font-size: 11px;
+      gap: 2px;
     }
-    .weather-day {
-      font-size: 12px;
-      opacity: .8;
-    }
-    .weather-temp {
-      font-size: 20px;
-      font-weight: 700;
+    .weather-day-item img {
+      width: 28px;
+      height: 28px;
     }
     
     .search-box {
@@ -242,6 +209,7 @@
       border-radius: 12px;
       transition: border-color .2s ease, background .2s ease, transform .2s ease;
       min-height: 90px;
+      position: relative;
     }
     .link-item svg,
     .link-item img {
@@ -258,6 +226,28 @@
       font-size: 11px;
       line-height: 1.2;
       max-width: 90px;
+    }
+    .link-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 18px;
+      height: 18px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(246,120,40,.8);
+      color: #fff;
+      font-size: 12px;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .link-item:hover .link-remove { display: flex; }
+    .link-add {
+      cursor: pointer;
     }
     
     .notes-area {
@@ -301,10 +291,9 @@
       .calendar-card { height: 400px; }
       .search-box { width: 100%; }
       .links-grid { grid-template-columns: repeat(2, 1fr); }
-      .weather-row { gap: 8px; display: flex; flex-wrap: wrap; }
-      .alarm-card { flex: 1 1 45%; }
-      .location-card { flex: 1 1 45%; }
-      .weather-card { flex: 1 1 45%; }
+      .weather-row { gap: 8px; flex-wrap: wrap; }
+      .location-card { flex: 1 1 100%; }
+      .weather-week-card { flex: 1 1 100%; }
     }
   </style>
 </head>
@@ -317,36 +306,20 @@
         <h1 class="title">Startpage</h1>
       </div>
       
-      <div class="time">
+      <div class="time" id="timeDisplay" title="Clicca per impostare la sveglia">
         <span id="time-main">00:00</span>
         <span class="time-seconds" id="time-sec">:00</span>
       </div>
+      <div id="alarmStatus" style="font-size:12px; opacity:.8; min-height:16px;"></div>
       
       <div class="weather-row">
-        <div class="alarm-card">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f67828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3L2 6"/><path d="M22 6l-3-3"/><path d="M6.38 18.7L4 21"/><path d="M17.64 18.67L20 21"/></svg>
-          <input type="time" id="alarmTime">
-          <button onclick="setAlarm()">Imposta</button>
-          <span id="alarmStatus" style="font-size:12px; opacity:.8;"></span>
-        </div>
         <div class="location-card">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f67828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           <input id="locationInput" value="Pietrasanta" placeholder="Località">
           <button onclick="updateLocation()">Cambia</button>
         </div>
-        <div class="weather-card">
-          <img class="weather-icon" id="weather-icon-today" src="" alt="">
-          <div class="weather-info">
-            <span class="weather-day">Oggi</span>
-            <span class="weather-temp" id="weather-today">--°</span>
-          </div>
-        </div>
-        <div class="weather-card">
-          <img class="weather-icon" id="weather-icon-tomorrow" src="" alt="">
-          <div class="weather-info">
-            <span class="weather-day">Domani</span>
-            <span class="weather-temp" id="weather-tomorrow">--°</span>
-          </div>
+        <div class="weather-week-card" id="weatherWeek">
+          <div style="opacity:.8;">Caricamento meteo...</div>
         </div>
       </div>
       
@@ -356,56 +329,7 @@
         <button type="submit">Cerca</button>
       </form>
       
-      <div class="links-grid" id="linksGrid">
-        <a class="link-item" href="https://www.gabrielelombardisrl.com" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <span class="link-name">Sito</span>
-        </a>
-        <a class="link-item" href="https://server703.web-hosting.com:2096/cpsess1949584074/webmail/jupiter/account_preferences/index.html#/" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <span class="link-name">Webmail</span>
-        </a>
-        <a class="link-item" href="https://www.namecheap.com" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          <span class="link-name">Namecheap</span>
-        </a>
-        <a class="link-item" href="https://webmail.infocert.it/legalmail/" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
-          <span class="link-name">Legalmail PEC</span>
-        </a>
-        <a class="link-item" href="https://www.namirial.it/pec/" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6L12 13 2 6"/></svg>
-          <span class="link-name">Namirial PEC</span>
-        </a>
-        <a class="link-item" href="https://mail.google.com" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <span class="link-name">Gmail</span>
-        </a>
-        <a class="link-item" href="https://www.fattureincloud.it" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
-          <span class="link-name">Fatture in cloud</span>
-        </a>
-        <a class="link-item" href="https://drive.google.com/drive/folders/1b-_ltrPAFRr6zDzSw6Bn8rayREw6NcQG?usp=drive_link" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          <span class="link-name">Google Drive</span>
-        </a>
-        <a class="link-item" href="https://github.com/lombardiadmin?tab=repositories" target="_blank">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-          <span class="link-name">GitHub</span>
-        </a>
-        <a class="link-item" href="https://www.facebook.com/gabrielelombardi.srl" target="_blank">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.891h-2.33v6.988C18.343 21.128 22 4.991 22 12z"/></svg>
-          <span class="link-name">Facebook</span>
-        </a>
-        <a class="link-item" href="https://www.instagram.com/gabrielelombardi.srl/" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          <span class="link-name">Instagram</span>
-        </a>
-        <button class="link-item" onclick="addCustomLink()" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span class="link-name">Aggiungi</span>
-        </button>
-      </div>
+      <div class="links-grid" id="linksGrid"></div>
       
       <div class="notes-area">
         <textarea id="notes" placeholder="Scrivi in modo costante e abbondante"></textarea>
@@ -452,27 +376,39 @@
           alarmAudioCtx.resume();
         }
         const ctx = alarmAudioCtx;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 880;
-        osc.type = 'sine';
-        gain.gain.setValueAtTime(0.3, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 1.5);
-      } catch(e) {
-        try { new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=').play(); } catch(_) {}
-      }
+        const now = ctx.currentTime;
+        const freqs = [880, 988, 1047, 988, 880, 988, 1047, 988, 880, 988, 1047, 988];
+        freqs.forEach((f, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.frequency.value = f;
+          osc.type = 'sine';
+          const t = now + i * 0.3;
+          gain.gain.setValueAtTime(0.001, t);
+          gain.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+          osc.start(t);
+          osc.stop(t + 0.29);
+        });
+      } catch(e) {}
     }
-    function setAlarm() {
-      const val = document.getElementById('alarmTime').value;
+    function setAlarmByClick() {
+      const val = prompt('Imposta sveglia (HH:MM):', alarmTime || '');
       if (!val) return;
+      if (!/^\d{2}:\d{2}$/.test(val)) {
+        alert('Formato non valido. Usa HH:MM');
+        return;
+      }
       alarmTime = val;
       alarmTriggered = false;
-      document.getElementById('alarmStatus').textContent = 'Sveglia impostata per ' + val;
+      localStorage.setItem('startpage-alarm', val);
+      document.getElementById('alarmStatus').textContent = 'Sveglia: ' + val;
     }
+    document.getElementById('timeDisplay').addEventListener('click', setAlarmByClick);
+    const savedAlarm = localStorage.getItem('startpage-alarm');
+    if (savedAlarm) { alarmTime = savedAlarm; document.getElementById('alarmStatus').textContent = 'Sveglia: ' + savedAlarm; }
     setInterval(() => {
       if (!alarmTime) return;
       const now = new Date();
@@ -480,7 +416,7 @@
       if (cur === alarmTime && !alarmTriggered) {
         alarmTriggered = true;
         playAlarm();
-        alert('Sveglia!');
+        alert('!!SVEGLIA!!');
         document.getElementById('alarmStatus').textContent = 'Sveglia attivata';
       }
     }, 1000);
@@ -496,21 +432,28 @@
         if (data[0]) {
           weatherLat = parseFloat(data[0].lat);
           weatherLon = parseFloat(data[0].lon);
+          localStorage.setItem('startpage-location', JSON.stringify({ name: loc, lat: weatherLat, lon: weatherLon }));
           loadWeather();
         }
       } catch(e) {
         loadWeather();
       }
     }
+    const savedLoc = localStorage.getItem('startpage-location');
+    if (savedLoc) {
+      try {
+        const sl = JSON.parse(savedLoc);
+        if (sl.lat && sl.lon) { weatherLat = sl.lat; weatherLon = sl.lon; document.getElementById('locationInput').value = sl.name || 'Pietrasanta'; }
+      } catch(e) {}
+    }
     
     async function loadWeather() {
       try {
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${weatherLat}&longitude=${weatherLon}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Europe/Rome&forecast_days=2`);
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${weatherLat}&longitude=${weatherLon}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Europe/Rome&forecast_days=7`);
         const data = await res.json();
-        const codes = data.daily.weathercode;
-        const max = data.daily.temperature_2m_max;
-        document.getElementById('weather-today').textContent = Math.round(max[0]) + '°';
-        document.getElementById('weather-tomorrow').textContent = Math.round(max[1]) + '°';
+        const codes = data.daily.weathercode || [];
+        const max = data.daily.temperature_2m_max || [];
+        const dates = data.daily.time || [];
         const icons = {
           0: 'https://openweathermap.org/img/wn/01d@2x.png',1:'https://openweathermap.org/img/wn/01d@2x.png',2:'https://openweathermap.org/img/wn/02d@2x.png',3:'https://openweathermap.org/img/wn/03d@2x.png',
           45:'https://openweathermap.org/img/wn/50d@2x.png',48:'https://openweathermap.org/img/wn/50d@2x.png',
@@ -520,57 +463,109 @@
           80:'https://openweathermap.org/img/wn/09d@2x.png',81:'https://openweathermap.org/img/wn/09d@2x.png',82:'https://openweathermap.org/img/wn/09d@2x.png',
           95:'https://openweathermap.org/img/wn/11d@2x.png'
         };
-        document.getElementById('weather-icon-today').src = icons[codes[0]] || icons[0];
-        document.getElementById('weather-icon-tomorrow').src = icons[codes[1]] || icons[0];
+        const days = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+        const container = document.getElementById('weatherWeek');
+        container.innerHTML = '';
+        for (let i = 0; i < dates.length; i++) {
+          const d = new Date(dates[i] + 'T12:00:00');
+          const el = document.createElement('div');
+          el.className = 'weather-day-item';
+          el.innerHTML = `<div>${days[d.getDay()]}</div><img src="${icons[codes[i]] || icons[0]}" alt=""><div>${Math.round(max[i])}°</div>`;
+          container.appendChild(el);
+        }
       } catch(e) {}
     }
     loadWeather();
 
-    // Custom links
-    function loadCustomLinks() {
+    // Links management
+    const defaultLinks = [
+      { name: 'Sito', url: 'https://www.gabrielelombardisrl.com' },
+      { name: 'Webmail', url: 'https://server703.web-hosting.com:2096/cpsess1949584074/webmail/jupiter/account_preferences/index.html#/' },
+      { name: 'Namecheap', url: 'https://www.namecheap.com' },
+      { name: 'Legalmail PEC', url: 'https://webmail.infocert.it/legalmail/' },
+      { name: 'Namirial PEC', url: 'https://www.namirial.it/pec/' },
+      { name: 'Gmail', url: 'https://mail.google.com' },
+      { name: 'Fatture in cloud', url: 'https://www.fattureincloud.it' },
+      { name: 'Google Drive', url: 'https://drive.google.com/drive/folders/1b-_ltrPAFRr6zDzSw6Bn8rayREw6NcQG?usp=drive_link' },
+      { name: 'GitHub', url: 'https://github.com/lombardiadmin?tab=repositories' },
+      { name: 'Facebook', url: 'https://www.facebook.com/gabrielelombardi.srl' },
+      { name: 'Instagram', url: 'https://www.instagram.com/gabrielelombardi.srl/' }
+    ];
+    function getLinks() {
       try {
-        const links = JSON.parse(localStorage.getItem('startpage-custom-links') || '[]');
-        const grid = document.getElementById('linksGrid');
-        const addBtn = grid.querySelector('button[onclick="addCustomLink()"]');
-        links.slice(0, 16).forEach(link => {
+        const raw = localStorage.getItem('startpage-links');
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      const init = defaultLinks.slice(0, 16);
+      while (init.length < 16) init.push(null);
+      localStorage.setItem('startpage-links', JSON.stringify(init));
+      return init;
+    }
+    function saveLinks(links) {
+      localStorage.setItem('startpage-links', JSON.stringify(links));
+    }
+    function linkIconSvg() {
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
+    }
+    function renderLinks() {
+      const grid = document.getElementById('linksGrid');
+      if (!grid) return;
+      const links = getLinks();
+      grid.innerHTML = '';
+      links.forEach((link, i) => {
+        if (link && link.url) {
+          const wrap = document.createElement('div');
+          wrap.className = 'link-item';
+          wrap.style.position = 'relative';
           const a = document.createElement('a');
-          a.className = 'link-item';
           a.href = link.url;
           a.target = '_blank';
-          a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span class="link-name">' + (link.name || 'Link') + '</span>';
-          grid.insertBefore(a, addBtn);
-        });
-      } catch(e) {}
-    }
-
-    function addCustomLink() {
-      try {
-        const links = JSON.parse(localStorage.getItem('startpage-custom-links') || '[]');
-        if (links.length >= 16) {
-          alert('Limite massimo di 16 link raggiunto.');
-          return;
+          a.style.color = 'inherit';
+          a.style.textDecoration = 'none';
+          a.style.display = 'flex';
+          a.style.flexDirection = 'column';
+          a.style.alignItems = 'center';
+          a.style.gap = '6px';
+          a.innerHTML = linkIconSvg() + '<span class="link-name">' + (link.name || 'Link') + '</span>';
+          const remove = document.createElement('button');
+          remove.className = 'link-remove';
+          remove.type = 'button';
+          remove.textContent = '×';
+          remove.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const ls = getLinks();
+            ls[i] = null;
+            saveLinks(ls);
+            renderLinks();
+          });
+          wrap.appendChild(a);
+          wrap.appendChild(remove);
+          grid.appendChild(wrap);
+        } else {
+          const add = document.createElement('button');
+          add.className = 'link-item link-add';
+          add.type = 'button';
+          add.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span class="link-name">Aggiungi</span>';
+          add.addEventListener('click', () => addLinkAt(i));
+          grid.appendChild(add);
         }
-        const name = prompt('Nome del link:');
-        if (!name) return;
-        let url = prompt('URL del link (includi https://):');
-        if (!url) return;
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-          url = 'https://' + url;
-        }
-        links.push({ name, url });
-        localStorage.setItem('startpage-custom-links', JSON.stringify(links));
-        const grid = document.getElementById('linksGrid');
-        const addBtn = grid.querySelector('button[onclick="addCustomLink()"]');
-        const a = document.createElement('a');
-        a.className = 'link-item';
-        a.href = url;
-        a.target = '_blank';
-        a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span class="link-name">' + name + '</span>';
-        grid.insertBefore(a, addBtn);
-      } catch(e) {}
+      });
     }
-
-    loadCustomLinks();
+    function addLinkAt(index) {
+      const name = prompt('Nome del link:');
+      if (!name) return;
+      let url = prompt('URL del link (includi https://):');
+      if (!url) return;
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      const links = getLinks();
+      links[index] = { name, url };
+      saveLinks(links);
+      renderLinks();
+    }
+    renderLinks();
 
     const notes = document.getElementById('notes');
     if (notes) {
