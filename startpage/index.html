@@ -150,15 +150,21 @@
     }
     .weather-day-item {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      min-width: 58px;
+      min-width: 90px;
+      flex: 1;
       font-size: 11px;
-      gap: 2px;
+      gap: 6px;
     }
     .weather-day-item img {
-      width: 28px;
-      height: 28px;
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    .weather-day-meta {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
     }
     
     .search-box {
@@ -285,6 +291,9 @@
       border: none;
     }
     
+    @media (min-width: 1101px) {
+      .cal-note { font-size: 12px !important; }
+    }
     @media (max-width: 1100px) {
       .container { grid-template-columns: 1fr; overflow: visible; }
       html, body { overflow: visible; }
@@ -395,10 +404,10 @@
       } catch(e) {}
     }
     function setAlarmByClick() {
-      const val = prompt('Imposta sveglia (HH:MM):', alarmTime || '');
+      const val = prompt('Imposta sveglia (HH.MM):', alarmTime || '');
       if (!val) return;
-      if (!/^\d{2}:\d{2}$/.test(val)) {
-        alert('Formato non valido. Usa HH:MM');
+      if (!/^\d{2}\.\d{2}$/.test(val)) {
+        alert('Formato non valido. Usa HH.MM');
         return;
       }
       alarmTime = val;
@@ -412,7 +421,7 @@
     setInterval(() => {
       if (!alarmTime) return;
       const now = new Date();
-      const cur = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      const cur = String(now.getHours()).padStart(2,'0') + '.' + String(now.getMinutes()).padStart(2,'0');
       if (cur === alarmTime && !alarmTriggered) {
         alarmTriggered = true;
         playAlarm();
@@ -470,7 +479,7 @@
           const d = new Date(dates[i] + 'T12:00:00');
           const el = document.createElement('div');
           el.className = 'weather-day-item';
-          el.innerHTML = `<div>${days[d.getDay()]}</div><img src="${icons[codes[i]] || icons[0]}" alt=""><div>${Math.round(max[i])}°</div>`;
+          el.innerHTML = `<img src="${icons[codes[i]] || icons[0]}" alt=""><div class="weather-day-meta"><div>${days[d.getDay()]}</div><div>${Math.round(max[i])}°</div></div>`;
           container.appendChild(el);
         }
       } catch(e) {}
@@ -610,9 +619,10 @@
         }
         const note = document.createElement('div');
         note.contentEditable = true;
+        note.className = 'cal-note';
         note.setAttribute('data-date', year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0'));
         note.style.flex = '1';
-        note.style.fontSize = '9px';
+        note.style.fontSize = '11px';
         note.style.padding = '2px 4px';
         note.style.outline = 'none';
         note.style.wordBreak = 'break-word';
