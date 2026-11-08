@@ -145,6 +145,12 @@
       flex: 1;
       font-size: 11px;
       gap: 6px;
+      padding: 4px 6px;
+      border-radius: 8px;
+    }
+    .weather-day-item.today {
+      background: rgba(246,120,40,0.25);
+      border: 1px solid rgba(246,120,40,0.6);
     }
     .weather-day-item img {
       width: 54px;
@@ -393,8 +399,15 @@
       } catch(e) {}
     }
     function setAlarmByClick() {
-      const val = prompt('Imposta sveglia (HH.MM):', alarmTime || '');
-      if (!val) return;
+      const val = prompt('Imposta sveglia (HH.MM) — lascia vuoto per rimuovere:', alarmTime || '');
+      if (val === null) return;
+      if (val === '') {
+        alarmTime = null;
+        alarmTriggered = false;
+        localStorage.removeItem('startpage-alarm');
+        document.getElementById('alarmStatus').textContent = '';
+        return;
+      }
       if (!/^\d{2}\.\d{2}$/.test(val)) {
         alert('Formato non valido. Usa HH.MM');
         return;
@@ -470,11 +483,13 @@
         const days = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
         const container = document.getElementById('weatherWeek');
         container.innerHTML = '';
+        const today = new Date();
         for (let i = 0; i < dates.length; i++) {
           const d = new Date(dates[i] + 'T12:00:00');
           const el = document.createElement('div');
-          el.className = 'weather-day-item';
-          el.innerHTML = `<img src="${icons[codes[i]] || icons[0]}" alt=""><div class="weather-day-meta"><div>${days[d.getDay()]}</div><div>${Math.round(max[i])}°</div></div>`;
+          const isToday = d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth() && d.getDate() === today.getDate();
+          el.className = 'weather-day-item' + (isToday ? ' today' : '');
+          el.innerHTML = `<img src="${icons[codes[i]] || icons[0]}" alt=""><div class="weather-day-meta"><div>${isToday ? 'Oggi' : days[d.getDay()]}</div><div>${Math.round(max[i])}°</div></div>`;
           container.appendChild(el);
         }
       } catch(e) {}
